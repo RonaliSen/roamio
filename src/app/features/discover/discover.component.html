@@ -1,4 +1,111 @@
-<section class="px-6 py-16">
-  <h1 class="font-display text-3xl text-charcoal">Discover</h1>
-  <p class="font-ui text-taupe">Discover — coming soon.</p>
+<section class="mx-auto max-w-6xl px-6 py-16">
+  <h1 class="font-display text-4xl text-charcoal">Discover</h1>
+  <p class="mt-2 font-ui text-taupe">Find a place that matches your budget, season and pace.</p>
+
+  <div class="mt-8">
+    <app-search-field
+      [placeholder]="'Search destinations, countries or styles'"
+      (search)="query.set($event)"
+    />
+  </div>
+
+  <div class="mt-6 grid gap-6 font-ui text-sm sm:grid-cols-3">
+    <label class="flex flex-col gap-2 text-taupe">
+      <span
+        >Max daily budget:
+        <span class="text-charcoal">{{
+          maxDailyBudget() === null ? 'Any' : '$' + maxDailyBudget()
+        }}</span></span
+      >
+      <input
+        type="range"
+        [min]="budgetMin"
+        [max]="budgetMax"
+        step="10"
+        [value]="maxDailyBudget() ?? budgetMax"
+        (input)="onBudgetInput($any($event.target).value)"
+      />
+      <button
+        type="button"
+        class="self-start border border-taupe px-3 py-1 text-taupe"
+        (click)="maxDailyBudget.set(null)"
+      >
+        No limit
+      </button>
+    </label>
+
+    <label class="flex flex-col gap-2 text-taupe">
+      <span>Style</span>
+      <select
+        class="border border-taupe bg-white px-2 py-2 text-charcoal"
+        [value]="style() ?? ''"
+        (change)="style.set($any($event.target).value || null)"
+      >
+        <option value="">Any style</option>
+        @for (s of styles; track s) {
+          <option [value]="s">{{ s }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="flex flex-col gap-2 text-taupe">
+      <span>Best month</span>
+      <select
+        class="border border-taupe bg-white px-2 py-2 text-charcoal"
+        [value]="month() ?? ''"
+        (change)="month.set($any($event.target).value ? +$any($event.target).value : null)"
+      >
+        <option value="">Any month</option>
+        @for (m of months; track m.value) {
+          <option [value]="m.value">{{ m.name }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  @if (all() === undefined) {
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      @for (s of skeletons; track $index) {
+        <app-card>
+          <app-skeleton [lines]="4" />
+        </app-card>
+      }
+    </div>
+  } @else if (results().length === 0) {
+    <div class="mt-10 border border-champagne bg-surface p-10 text-center font-ui">
+      <p class="text-charcoal">No destinations match — loosen a filter</p>
+      <div class="mt-4 flex justify-center">
+        <app-button variant="ghost" (click)="clearFilters()">Clear filters</app-button>
+      </div>
+    </div>
+  } @else {
+    <p class="mt-10 font-ui text-sm text-taupe">
+      {{ results().length }} {{ results().length === 1 ? 'place' : 'places' }}
+    </p>
+    <div class="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      @for (d of results(); track d.slug) {
+        <a [routerLink]="['/destinations', d.slug]" class="block">
+          <app-card>
+            <img
+              [src]="d.heroImage"
+              [alt]="d.name"
+              class="mb-4 aspect-[4/3] w-full object-cover"
+            />
+            <h2 class="font-display text-xl text-charcoal">{{ d.name }}</h2>
+            <p class="font-ui text-sm text-taupe">{{ d.country }}</p>
+            <p class="mt-1 font-ui text-sm text-taupe">
+              ${{ d.dailyBudgetLow }}–${{ d.dailyBudgetHigh }} / day
+            </p>
+            <ul class="mt-3 flex flex-wrap gap-2">
+              @for (tag of d.styleTags; track tag) {
+                <li class="border border-champagne px-2 py-0.5 font-ui text-xs text-taupe">
+                  {{ tag }}
+                </li>
+              }
+            </ul>
+          </app-card>
+        </a>
+      }
+    </div>
+  }
 </section>
