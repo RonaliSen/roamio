@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 let uid = 0;
@@ -16,6 +16,8 @@ export class InputComponent implements ControlValueAccessor {
   @Input() type = 'text';
   @Input() error?: string;
 
+  private cdr = inject(ChangeDetectorRef);
+
   readonly id = `app-input-${uid++}`;
   value = '';
   disabled = false;
@@ -30,6 +32,7 @@ export class InputComponent implements ControlValueAccessor {
 
   writeValue(v: string | null): void {
     this.value = v ?? '';
+    this.cdr.markForCheck();
   }
   registerOnChange(fn: (v: string) => void): void {
     this.onChange = fn;

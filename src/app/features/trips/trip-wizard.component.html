@@ -1,4 +1,167 @@
-<section class="px-6 py-16">
-  <h1 class="font-display text-3xl text-charcoal">Plan a trip</h1>
-  <p class="font-ui text-taupe">Trip wizard — coming soon.</p>
+<section class="mx-auto max-w-2xl px-6 py-12">
+  <h1 class="text-3xl text-charcoal">Plan a trip</h1>
+  <p class="mt-1 font-ui text-sm text-taupe">Step {{ step() + 1 }} of {{ totalSteps }}</p>
+
+  <div class="mt-4 flex gap-1" aria-hidden="true">
+    @for (i of [0, 1, 2, 3, 4]; track i) {
+      <span
+        class="h-1 flex-1"
+        [class]="i <= step() ? 'bg-charcoal' : 'bg-surface'"
+      ></span>
+    }
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-8">
+    <app-card>
+      <!-- Step 0: destination -->
+      @if (step() === 0) {
+        <h2 class="text-xl text-charcoal">Where to?</h2>
+        @if (destinationLocked()) {
+          <p class="mt-4 font-ui text-base text-charcoal">
+            {{ destination()?.name ?? form.controls.destinationSlug.value }}
+          </p>
+        } @else {
+          <label
+            for="destination-select"
+            class="mt-4 flex flex-col gap-1.5 font-ui text-sm text-charcoal"
+          >
+            <span>Destination</span>
+            <select
+              id="destination-select"
+              formControlName="destinationSlug"
+              class="border-b border-taupe bg-transparent px-1 py-2 text-base outline-none focus:border-champagne"
+            >
+              <option value="" disabled>Choose a destination</option>
+              @for (d of destinations(); track d.slug) {
+                <option [value]="d.slug">{{ d.name }}, {{ d.country }}</option>
+              }
+            </select>
+          </label>
+        }
+      }
+
+      <!-- Step 1: dates -->
+      @if (step() === 1) {
+        <h2 class="text-xl text-charcoal">When?</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <label for="start-date" class="flex flex-col gap-1.5 font-ui text-sm text-charcoal">
+            <span>Start date</span>
+            <input
+              id="start-date"
+              type="date"
+              formControlName="startDate"
+              class="border-b border-taupe bg-transparent px-1 py-2 text-base outline-none focus:border-champagne"
+            />
+          </label>
+          <label for="end-date" class="flex flex-col gap-1.5 font-ui text-sm text-charcoal">
+            <span>End date</span>
+            <input
+              id="end-date"
+              type="date"
+              formControlName="endDate"
+              class="border-b border-taupe bg-transparent px-1 py-2 text-base outline-none focus:border-champagne"
+            />
+          </label>
+        </div>
+        @if (nights() > 0) {
+          <p class="mt-4 font-ui text-sm text-taupe">{{ nights() }} nights</p>
+        } @else if (form.controls.startDate.value && form.controls.endDate.value) {
+          <p class="mt-4 font-ui text-sm text-champagne">End date must be after the start date.</p>
+        }
+      }
+
+      <!-- Step 2: travelers -->
+      @if (step() === 2) {
+        <h2 class="text-xl text-charcoal">How many travelers?</h2>
+        <label for="travelers" class="mt-4 flex flex-col gap-1.5 font-ui text-sm text-charcoal">
+          <span>Travelers</span>
+          <input
+            id="travelers"
+            type="number"
+            min="1"
+            step="1"
+            formControlName="travelers"
+            class="w-24 border-b border-taupe bg-transparent px-1 py-2 text-base outline-none focus:border-champagne"
+          />
+        </label>
+      }
+
+      <!-- Step 3: budget -->
+      @if (step() === 3) {
+        <h2 class="text-xl text-charcoal">Budget</h2>
+        @if (estimate()) {
+          <p class="mt-2 font-ui text-sm text-taupe">
+            Estimated {{ estimateTotal() | number: '1.0-0' }} {{ 'EUR' }} for {{ nights() }} nights.
+          </p>
+          <label
+            for="budget-target"
+            class="mt-4 flex flex-col gap-1.5 font-ui text-sm text-charcoal"
+          >
+            <span>Total budget: {{ scaledTotal() | number: '1.0-0' }} EUR</span>
+            <input
+              id="budget-target"
+              type="range"
+              [min]="budgetMin()"
+              [max]="budgetMax()"
+              step="10"
+              formControlName="budgetTarget"
+              class="w-full accent-charcoal"
+            />
+          </label>
+          <dl class="mt-4 grid grid-cols-2 gap-x-6 gap-y-1 font-ui text-sm">
+            @for (line of budgetLines; track line.key) {
+              <div class="flex justify-between border-b border-surface py-1">
+                <dt class="text-taupe">{{ line.label }}</dt>
+                <dd class="text-charcoal">{{ scaledBudget()[line.key] | number: '1.0-0' }}</dd>
+              </div>
+            }
+          </dl>
+        } @else {
+          <p class="mt-2 font-ui text-sm text-taupe">Pick a destination and dates first.</p>
+        }
+      }
+
+      <!-- Step 4: interests + title -->
+      @if (step() === 4) {
+        <h2 class="text-xl text-charcoal">Interests</h2>
+        <p class="mt-1 font-ui text-sm text-taupe">Optional — helps shape the itinerary.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          @for (tag of interestOptions; track tag) {
+            <button
+              type="button"
+              (click)="toggleInterest(tag)"
+              [attr.aria-pressed]="hasInterest(tag)"
+              class="border px-3 py-1.5 font-ui text-sm capitalize"
+              [class]="hasInterest(tag) ? 'border-charcoal bg-charcoal text-white' : 'border-taupe text-charcoal'"
+            >
+              {{ tag }}
+            </button>
+          }
+        </div>
+        <div class="mt-6">
+          <app-input
+            label="Trip title"
+            formControlName="title"
+            [error]="form.controls.title.touched && form.controls.title.invalid ? 'A title is required' : undefined"
+          />
+        </div>
+      }
+    </app-card>
+
+    <div class="mt-6 flex items-center justify-between">
+      @if (step() > 0) {
+        <app-button variant="ghost" (click)="back()">Back</app-button>
+      } @else {
+        <span></span>
+      }
+
+      @if (step() < totalSteps - 1) {
+        <app-button variant="primary" [disabled]="!canAdvance()" (click)="next()">Next</app-button>
+      } @else {
+        <app-button type="submit" variant="primary" [disabled]="creating() || form.invalid">
+          Create trip
+        </app-button>
+      }
+    </div>
+  </form>
 </section>

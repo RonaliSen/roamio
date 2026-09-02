@@ -81,15 +81,21 @@ export function scaleBudgetToTarget(
     localTransport +
     shopping;
 
-  // Absorb remainder into accommodation to ensure exact total
-  const remainder = target - sumScaled;
+  // Absorb the rounding remainder into the largest line so the total stays
+  // exact. Guard against a hard scale-down pushing a line negative: if the
+  // largest line cannot absorb it all, roll the leftover onto the next-largest.
+  const lines = { accommodation, food, activities, transport, localTransport, shopping };
+  let remainder = target - sumScaled;
+  for (const key of Object.keys(lines) as (keyof typeof lines)[]) {
+    const next = lines[key] + remainder;
+    if (next >= 0) {
+      lines[key] = next;
+      remainder = 0;
+      break;
+    }
+    lines[key] = 0;
+    remainder = next;
+  }
 
-  return {
-    accommodation: accommodation + remainder,
-    transport,
-    food,
-    activities,
-    localTransport,
-    shopping,
-  };
+  return { ...lines };
 }

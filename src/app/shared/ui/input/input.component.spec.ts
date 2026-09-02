@@ -1,7 +1,6 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 
 import { InputComponent } from './input.component';
 
@@ -30,9 +29,6 @@ describe('InputComponent', () => {
 
   it('writeValue reflects the model value to the <input>', () => {
     host.control.setValue('prague');
-    // InputComponent is OnPush and writeValue does not markForCheck itself,
-    // so nudge its view the way a real host change would.
-    fixture.debugElement.query(By.directive(InputComponent)).injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     expect(inputEl().value).toBe('prague');
   });

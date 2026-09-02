@@ -21,4 +21,10 @@ describe('budget.engine', () => {
     const b = scaleBudgetToTarget(estimateBudget(90, 180, 4, 2), 555);
     expect(computeBudgetTotal(b)).toBe(555);
   });
+  it('scaling a lopsided budget down hard keeps every line non-negative and the total exact', () => {
+    const lopsided = { accommodation: 1, transport: 10, food: 10, activities: 10, localTransport: 10, shopping: 10 };
+    const b = scaleBudgetToTarget(lopsided, 3);
+    for (const v of Object.values(b)) expect(v).toBeGreaterThanOrEqual(0);
+    expect(computeBudgetTotal(b)).toBe(3);
+  });
 });
