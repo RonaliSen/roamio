@@ -4,7 +4,7 @@
       <img
         [src]="d.heroImage"
         [alt]="d.name"
-        class="aspect-[16/9] w-full object-cover md:aspect-[21/9]"
+        class="aspect-video w-full object-cover"
       />
       <div class="mx-auto max-w-4xl px-6 py-8">
         <h1 class="font-display text-4xl text-charcoal">{{ d.name }}</h1>
@@ -70,7 +70,7 @@
           @for (a of itinerary(); track a.title) {
             <li class="relative pl-6 pb-6 last:pb-0">
               <span
-                class="absolute left-[-4px] top-1 h-2 w-2 rounded-full bg-champagne"
+                class="absolute -left-1 top-1 h-2 w-2 rounded-full bg-champagne"
                 aria-hidden="true"
               ></span>
               <span class="block text-charcoal">{{ a.title }}</span>
@@ -83,7 +83,7 @@
   </article>
 
   <div
-    class="sticky bottom-0 z-30 mb-16 border-t border-champagne bg-ivory px-6 py-4 md:mb-0"
+    class="sticky bottom-16 z-30 border-t border-champagne bg-ivory px-6 py-4 md:bottom-0"
   >
     <div class="mx-auto flex max-w-4xl items-center justify-between gap-4">
       <span class="font-ui text-sm text-taupe">{{ d.name }}, {{ d.country }}</span>
