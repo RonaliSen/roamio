@@ -5,6 +5,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './skeleton.component.html',
+  styleUrl: './skeleton.component.css',
 })
 export class SkeletonComponent {
   rows: void[] = [];

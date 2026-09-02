@@ -9,6 +9,7 @@ import { AuthService } from '../../core/auth/auth.service';
   imports: [RouterLink, RouterLinkActive, LucideCompass],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
   readonly auth = inject(AuthService);

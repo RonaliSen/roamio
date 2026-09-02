@@ -16,6 +16,7 @@ interface Tab {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './tabs.component.html',
+  styleUrl: './tabs.component.css',
 })
 export class TabsComponent {
   @Input() tabs: Tab[] = [];

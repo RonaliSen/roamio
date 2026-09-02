@@ -7,6 +7,7 @@ import { ToastService } from './toast.service';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './toast.component.html',
+  styleUrl: './toast.component.css',
 })
 export class ToastOutletComponent {
   protected readonly toast = inject(ToastService);

@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './button.component.html',
+  styleUrl: './button.component.css',
 })
 export class ButtonComponent {
   @Input() variant: 'primary' | 'ghost' = 'primary';

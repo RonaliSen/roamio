@@ -14,6 +14,7 @@ import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
   imports: [RouterLink, SearchFieldComponent, CardComponent, SkeletonComponent, ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.component.html',
+  styleUrl: './home.component.css',
 })
 export class HomeComponent {
   private readonly router = inject(Router);

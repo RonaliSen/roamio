@@ -9,6 +9,7 @@ let uid = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: InputComponent, multi: true }],
   templateUrl: './input.component.html',
+  styleUrl: './input.component.css',
 })
 export class InputComponent implements ControlValueAccessor {
   @Input() label = '';

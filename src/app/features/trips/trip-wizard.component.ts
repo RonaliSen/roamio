@@ -5,5 +5,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './trip-wizard.component.html',
+  styleUrl: './trip-wizard.component.css',
 })
 export class TripWizardComponent {}

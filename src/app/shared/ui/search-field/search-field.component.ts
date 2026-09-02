@@ -13,6 +13,7 @@ import { Subject, Subscription, map, merge, switchMap, takeUntil, timer } from '
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './search-field.component.html',
+  styleUrl: './search-field.component.css',
 })
 export class SearchFieldComponent implements OnDestroy {
   @Input() placeholder = '';

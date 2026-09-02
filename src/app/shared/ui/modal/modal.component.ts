@@ -17,6 +17,7 @@ let uid = 0;
   imports: [A11yModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './modal.component.html',
+  styleUrl: './modal.component.css',
 })
 export class ModalComponent implements OnChanges {
   @Input() open = false;

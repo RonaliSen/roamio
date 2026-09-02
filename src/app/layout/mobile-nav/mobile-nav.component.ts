@@ -7,5 +7,6 @@ import { LucideCompass, LucideHouse, LucideLuggage } from '@lucide/angular';
   imports: [RouterLink, RouterLinkActive, LucideHouse, LucideCompass, LucideLuggage],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './mobile-nav.component.html',
+  styleUrl: './mobile-nav.component.css',
 })
 export class MobileNavComponent {}

@@ -13,6 +13,7 @@ import { ToastService } from '../../shared/ui/toast/toast.service';
   imports: [ReactiveFormsModule, InputComponent, ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
   private readonly fb = inject(FormBuilder);

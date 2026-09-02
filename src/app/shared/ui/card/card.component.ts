@@ -5,5 +5,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './card.component.html',
+  styleUrl: './card.component.css',
 })
 export class CardComponent {}
