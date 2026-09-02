@@ -21,7 +21,7 @@
     <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       @for (item of travelEdit; track item.title) {
         <app-card>
-          <p class="font-ui text-xs uppercase tracking-[0.2em] text-champagne">{{ item.kicker }}</p>
+          <p class="font-ui text-xs uppercase tracking-[0.2em] text-taupe">{{ item.kicker }}</p>
           <h3 class="mt-3 font-display text-2xl text-charcoal">{{ item.title }}</h3>
           <p class="mt-3 font-ui text-sm text-taupe">{{ item.blurb }}</p>
         </app-card>
@@ -61,9 +61,7 @@
       }
     </div>
     <div class="mt-12">
-      <a routerLink="/discover" class="inline-block">
-        <app-button variant="ghost">Browse every destination</app-button>
-      </a>
+      <app-button variant="ghost" routerLink="/discover">Explore all destinations</app-button>
     </div>
   </div>
 </section>
