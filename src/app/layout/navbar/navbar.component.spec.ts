@@ -1,12 +1,23 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
+
+import { AuthService } from '../../core/auth/auth.service';
 import { NavbarComponent } from './navbar.component';
 
 describe('NavbarComponent', () => {
+  const isAuthed = signal(false);
+  const signOut = jasmine.createSpy('signOut').and.resolveTo({ error: null });
+
   beforeEach(async () => {
+    isAuthed.set(false);
+    signOut.calls.reset();
     await TestBed.configureTestingModule({
       imports: [NavbarComponent],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        { provide: AuthService, useValue: { isAuthed, session: signal(null), signOut } },
+      ],
     }).compileComponents();
   });
 
@@ -18,17 +29,18 @@ describe('NavbarComponent', () => {
     expect(text).not.toContain('Sign out');
   });
 
-  it('shows "Sign out" and emits signOut when authed', () => {
+  it('shows "Sign out" and calls AuthService.signOut when authed', async () => {
+    isAuthed.set(true);
     const fixture = TestBed.createComponent(NavbarComponent);
-    fixture.componentRef.setInput('authed', true);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     expect(el.textContent).toContain('Sign out');
     expect(el.textContent).not.toContain('Sign in');
 
-    const spy = jasmine.createSpy('signOut');
-    fixture.componentInstance.signOut.subscribe(spy);
+    const navSpy = spyOn(TestBed.inject(Router), 'navigateByUrl').and.resolveTo(true);
     el.querySelector('button')?.click();
-    expect(spy).toHaveBeenCalled();
+    await fixture.whenStable();
+    expect(signOut).toHaveBeenCalled();
+    expect(navSpy).toHaveBeenCalledWith('/');
   });
 });

@@ -7,6 +7,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   template: `
     <button
       [type]="type"
+      [disabled]="disabled"
       class="inline-flex items-center justify-center px-6 py-3 font-ui text-sm tracking-wide
              transition-shadow hover:shadow-lg disabled:opacity-50"
       [class]="
@@ -20,4 +21,5 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 export class ButtonComponent {
   @Input() variant: 'primary' | 'ghost' = 'primary';
   @Input() type = 'button';
+  @Input() disabled = false;
 }

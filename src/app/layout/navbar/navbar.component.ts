@@ -1,12 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideCompass } from '@lucide/angular';
+
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -29,8 +25,8 @@ import { LucideCompass } from '@lucide/angular';
         <a routerLink="/trips" routerLinkActive="text-charcoal" class="hover:text-charcoal">
           My Trips
         </a>
-        @if (authed) {
-          <button type="button" (click)="signOut.emit()" class="hover:text-charcoal">Sign out</button>
+        @if (auth.isAuthed()) {
+          <button type="button" (click)="signOut()" class="hover:text-charcoal">Sign out</button>
         } @else {
           <a routerLink="/login" routerLinkActive="text-charcoal" class="hover:text-charcoal">
             Sign in
@@ -41,7 +37,11 @@ import { LucideCompass } from '@lucide/angular';
   `,
 })
 export class NavbarComponent {
-  /** Placeholder until Task 8 wires real auth. */
-  @Input() authed = false;
-  @Output() signOut = new EventEmitter<void>();
+  readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
+  async signOut(): Promise<void> {
+    await this.auth.signOut();
+    await this.router.navigateByUrl('/');
+  }
 }
