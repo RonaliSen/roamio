@@ -36,6 +36,24 @@ export interface TripDetail {
   budget: BudgetBreakdown;
 }
 
+export interface CreateTripInput {
+  destinationSlug: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  travelers: number;
+  interests: string[];
+  currency: string;
+  budget: BudgetBreakdown;
+}
+
+export interface NewActivity {
+  title: string;
+  category?: string;
+  startTime?: string | null;
+  notes?: string | null;
+}
+
 /** Reference/fixture activity, distinct from {@link TripActivity}. */
 export interface Activity {
   title: string;
