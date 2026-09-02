@@ -1,4 +1,105 @@
-<section class="px-6 py-16">
-  <h1 class="font-display text-3xl text-charcoal">Destination</h1>
-  <p class="font-ui text-taupe">Destination detail — coming soon.</p>
-</section>
+@if (destination(); as d) {
+  <article class="pb-28">
+    <section class="relative">
+      <img
+        [src]="d.heroImage"
+        [alt]="d.name"
+        class="aspect-[16/9] w-full object-cover md:aspect-[21/9]"
+      />
+      <div class="mx-auto max-w-4xl px-6 py-8">
+        <h1 class="font-display text-4xl text-charcoal">{{ d.name }}</h1>
+        <p class="mt-1 font-ui text-taupe">{{ d.country }}</p>
+        <p class="mt-3 max-w-2xl font-ui text-sm text-charcoal">{{ d.summary }}</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-4xl px-6">
+      <dl class="grid gap-4 border-y border-champagne py-6 font-ui text-sm sm:grid-cols-3">
+        <div>
+          <dt class="text-taupe">Best months</dt>
+          <dd class="mt-1 text-charcoal">{{ bestMonths() }}</dd>
+        </div>
+        <div>
+          <dt class="text-taupe">Daily budget</dt>
+          <dd class="mt-1 text-charcoal">€{{ d.dailyBudgetLow }}–€{{ d.dailyBudgetHigh }}/day</dd>
+        </div>
+        <div>
+          <dt class="text-taupe">Typical trip</dt>
+          <dd class="mt-1 text-charcoal">4–6 days</dd>
+        </div>
+      </dl>
+    </section>
+
+    @if (forecast().length) {
+      <section class="mx-auto max-w-4xl px-6 py-8">
+        <h2 class="font-display text-2xl text-charcoal">Weather preview</h2>
+        <ul class="mt-4 flex flex-wrap gap-3 font-ui text-sm">
+          @for (w of forecast(); track w.date) {
+            <li class="border border-champagne bg-white px-3 py-2 text-center">
+              <span class="block text-taupe">{{ shortDate(w.date) }}</span>
+              <span class="block text-charcoal">{{ w.tempHighC }}° / {{ w.tempLowC }}°</span>
+              <span class="block text-taupe">{{ w.condition }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    <section class="mx-auto max-w-4xl px-6 py-8">
+      <h2 class="font-display text-2xl text-charcoal">Budget estimate</h2>
+      <p class="mt-3 font-ui text-3xl text-charcoal">{{ budgetTotal() | number }}</p>
+      <p class="mt-1 font-ui text-sm text-taupe">estimated for 5 nights · 2 travellers</p>
+    </section>
+
+    @if (activities().length) {
+      <section class="mx-auto max-w-4xl px-6 py-8">
+        <h2 class="font-display text-2xl text-charcoal">Experiences</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          @for (a of activities(); track a.title) {
+            <app-card data-testid="experience-card">
+              <h3 class="font-display text-lg text-charcoal">{{ a.title }}</h3>
+              <p class="mt-1 font-ui text-sm text-taupe">{{ a.category }} · {{ a.durationHours }}h</p>
+            </app-card>
+          }
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-4xl px-6 py-8">
+        <h2 class="font-display text-2xl text-charcoal">Your Day 1, sketched</h2>
+        <ol class="mt-4 border-l border-champagne font-ui text-sm">
+          @for (a of itinerary(); track a.title) {
+            <li class="relative pl-6 pb-6 last:pb-0">
+              <span
+                class="absolute left-[-4px] top-1 h-2 w-2 rounded-full bg-champagne"
+                aria-hidden="true"
+              ></span>
+              <span class="block text-charcoal">{{ a.title }}</span>
+              <span class="block text-taupe">{{ a.durationHours }}h · {{ a.category }}</span>
+            </li>
+          }
+        </ol>
+      </section>
+    }
+  </article>
+
+  <div
+    class="sticky bottom-0 z-30 mb-16 border-t border-champagne bg-ivory px-6 py-4 md:mb-0"
+  >
+    <div class="mx-auto flex max-w-4xl items-center justify-between gap-4">
+      <span class="font-ui text-sm text-taupe">{{ d.name }}, {{ d.country }}</span>
+      <app-button variant="primary" (click)="buildTrip()">Build my trip</app-button>
+    </div>
+  </div>
+} @else if (notFound()) {
+  <section class="mx-auto max-w-2xl px-6 py-24 text-center">
+    <h1 class="font-display text-3xl text-charcoal">Destination not found</h1>
+    <p class="mt-2 font-ui text-taupe">We couldn't find that place.</p>
+    <a routerLink="/discover" class="mt-6 inline-block border border-charcoal px-6 py-3 font-ui text-sm text-charcoal">
+      Back to Discover
+    </a>
+  </section>
+} @else {
+  <section class="mx-auto max-w-4xl px-6 py-24">
+    <p class="font-ui text-taupe">Loading…</p>
+  </section>
+}
