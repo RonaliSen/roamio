@@ -6,7 +6,7 @@ import {
   OnDestroy,
   Output,
 } from '@angular/core';
-import { Subject, Subscription, debounceTime } from 'rxjs';
+import { Subject, Subscription, map, merge, switchMap, takeUntil, timer } from 'rxjs';
 
 @Component({
   selector: 'app-search-field',
@@ -20,9 +20,20 @@ export class SearchFieldComponent implements OnDestroy {
   // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() search = new EventEmitter<string>();
   term$ = new Subject<string>();
-  private sub: Subscription = this.term$
-    .pipe(debounceTime(300))
-    .subscribe((v) => this.search.emit(v));
+  private readonly flush$ = new Subject<string>();
+  // Typing debounces; Enter goes through `flush$`, which both emits immediately
+  // and cancels the pending debounce timer so no duplicate follows 300ms later.
+  private sub: Subscription = merge(
+    this.term$.pipe(
+      switchMap((v) => timer(300).pipe(map(() => v), takeUntil(this.flush$))),
+    ),
+    this.flush$,
+  ).subscribe((v) => this.search.emit(v));
+
+  flush(value: string): void {
+    this.flush$.next(value);
+  }
+
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }

@@ -18,4 +18,15 @@ describe('SearchFieldComponent', () => {
     tick(300);
     expect(emitted).toEqual(['prague']);
   }));
+
+  it('emits exactly once on Enter with no trailing debounced duplicate', fakeAsync(() => {
+    const emitted: string[] = [];
+    fixture.componentInstance.search.subscribe((v) => emitted.push(v));
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+    input.value = 'prague in spring'; input.dispatchEvent(new Event('input'));
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    expect(emitted).toEqual(['prague in spring']);
+    tick(300);
+    expect(emitted).toEqual(['prague in spring']);
+  }));
 });

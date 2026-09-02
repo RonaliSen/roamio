@@ -1,4 +1,69 @@
-<section class="px-6 py-16">
-  <h1 class="font-display text-3xl text-charcoal">Roamio</h1>
-  <p class="font-ui text-taupe">Home — coming soon.</p>
+<section class="flex min-h-[70vh] flex-col justify-center bg-surface px-6 py-24 sm:px-10">
+  <div class="mx-auto w-full max-w-3xl">
+    <p class="font-ui text-xs uppercase tracking-[0.3em] text-taupe">Roamio</p>
+    <h1 class="mt-6 font-display text-5xl leading-tight text-charcoal sm:text-6xl lg:text-7xl">
+      Where will you wander next?
+    </h1>
+    <p class="mt-4 font-display text-2xl text-taupe">Every journey, considered.</p>
+    <div class="mt-10">
+      <app-search-field
+        placeholder="Where to next? Try 'quiet coast, 5 days, mild weather'"
+        (search)="onSearch($event)"
+      />
+    </div>
+  </div>
+</section>
+
+<section class="px-6 py-20 sm:px-10">
+  <div class="mx-auto w-full max-w-5xl">
+    <h2 class="font-display text-3xl text-charcoal sm:text-4xl">The Travel Edit</h2>
+    <p class="mt-2 font-ui text-sm text-taupe">Editorial notes from the road, updated slowly.</p>
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      @for (item of travelEdit; track item.title) {
+        <app-card>
+          <p class="font-ui text-xs uppercase tracking-[0.2em] text-champagne">{{ item.kicker }}</p>
+          <h3 class="mt-3 font-display text-2xl text-charcoal">{{ item.title }}</h3>
+          <p class="mt-3 font-ui text-sm text-taupe">{{ item.blurb }}</p>
+        </app-card>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="px-6 py-20 sm:px-10">
+  <div class="mx-auto w-full max-w-5xl">
+    <h2 class="font-display text-3xl text-charcoal sm:text-4xl">Recommended for you</h2>
+    <p class="mt-2 font-ui text-sm text-taupe">Places worth building a trip around.</p>
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      @if (destinations(); as list) {
+        @for (d of list; track d.slug) {
+          <a [routerLink]="['/destinations', d.slug]" class="block">
+            <app-card>
+              <img
+                [src]="d.heroImage"
+                [alt]="d.name + ', ' + d.country"
+                class="aspect-[4/3] w-full object-cover"
+              />
+              <h3 class="mt-4 font-display text-2xl text-charcoal">{{ d.name }}</h3>
+              <p class="mt-1 font-ui text-sm text-taupe">{{ d.country }}</p>
+            </app-card>
+          </a>
+        }
+      } @else {
+        @for (s of skeletons; track s) {
+          <app-card>
+            <div class="aspect-[4/3] w-full animate-pulse bg-surface"></div>
+            <div class="mt-4">
+              <app-skeleton [lines]="2" />
+            </div>
+          </app-card>
+        }
+      }
+    </div>
+    <div class="mt-12">
+      <a routerLink="/discover" class="inline-block">
+        <app-button variant="ghost">Browse every destination</app-button>
+      </a>
+    </div>
+  </div>
 </section>
