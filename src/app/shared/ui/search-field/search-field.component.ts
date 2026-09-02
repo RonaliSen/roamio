@@ -12,17 +12,7 @@ import { Subject, Subscription, debounceTime } from 'rxjs';
   selector: 'app-search-field',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <input
-      type="search"
-      class="w-full rounded-none border-b border-taupe bg-transparent px-1 py-3 font-ui text-lg
-             outline-none placeholder:text-taupe focus:border-champagne"
-      [attr.aria-label]="placeholder"
-      [placeholder]="placeholder"
-      (input)="term$.next($any($event.target).value)"
-      (keydown.enter)="search.emit($any($event.target).value)"
-    />
-  `,
+  templateUrl: './search-field.component.html',
 })
 export class SearchFieldComponent implements OnDestroy {
   @Input() placeholder = '';

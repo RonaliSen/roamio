@@ -8,28 +8,7 @@ let uid = 0;
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: InputComponent, multi: true }],
-  template: `
-    <label class="flex flex-col gap-1.5 font-ui text-sm text-charcoal">
-      @if (label) {
-        <span>{{ label }}</span>
-      }
-      <input
-        [id]="id"
-        [type]="type"
-        [value]="value"
-        [disabled]="disabled"
-        [attr.aria-invalid]="error ? 'true' : null"
-        [attr.aria-describedby]="error ? id + '-error' : null"
-        class="border-b bg-transparent px-1 py-2 text-base outline-none focus:border-champagne"
-        [class]="error ? 'border-champagne' : 'border-taupe'"
-        (input)="onInput($any($event.target).value)"
-        (blur)="onTouched()"
-      />
-      @if (error) {
-        <span [id]="id + '-error'" class="text-sm text-taupe">{{ error }}</span>
-      }
-    </label>
-  `,
+  templateUrl: './input.component.html',
 })
 export class InputComponent implements ControlValueAccessor {
   @Input() label = '';

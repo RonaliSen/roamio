@@ -6,36 +6,6 @@ import { LucideCompass, LucideHouse, LucideLuggage } from '@lucide/angular';
   selector: 'app-mobile-nav',
   imports: [RouterLink, RouterLinkActive, LucideHouse, LucideCompass, LucideLuggage],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <nav
-      class="fixed inset-x-0 bottom-0 z-40 flex items-center justify-around border-t border-champagne bg-ivory py-2 md:hidden"
-    >
-      <a
-        routerLink="/"
-        routerLinkActive="text-charcoal"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="flex flex-col items-center gap-1 text-taupe"
-      >
-        <svg lucideHouse [size]="20"></svg>
-        <span class="text-[11px]">Home</span>
-      </a>
-      <a
-        routerLink="/discover"
-        routerLinkActive="text-charcoal"
-        class="flex flex-col items-center gap-1 text-taupe"
-      >
-        <svg lucideCompass [size]="20"></svg>
-        <span class="text-[11px]">Discover</span>
-      </a>
-      <a
-        routerLink="/trips"
-        routerLinkActive="text-charcoal"
-        class="flex flex-col items-center gap-1 text-taupe"
-      >
-        <svg lucideLuggage [size]="20"></svg>
-        <span class="text-[11px]">Trips</span>
-      </a>
-    </nav>
-  `,
+  templateUrl: './mobile-nav.component.html',
 })
 export class MobileNavComponent {}

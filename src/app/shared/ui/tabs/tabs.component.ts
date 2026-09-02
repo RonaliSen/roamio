@@ -15,25 +15,7 @@ interface Tab {
   selector: 'app-tabs',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div role="tablist" class="flex gap-6 border-b border-champagne font-ui text-sm">
-      @for (tab of tabs; track tab.id) {
-        <button
-          role="tab"
-          type="button"
-          [id]="'tab-' + tab.id"
-          [attr.aria-selected]="tab.id === active"
-          [tabindex]="tab.id === active ? 0 : -1"
-          class="-mb-px border-b-2 px-1 py-3"
-          [class]="tab.id === active ? 'border-charcoal text-charcoal' : 'border-transparent text-taupe'"
-          (click)="select(tab.id)"
-          (keydown)="onKeydown($event, $index)"
-        >
-          {{ tab.label }}
-        </button>
-      }
-    </div>
-  `,
+  templateUrl: './tabs.component.html',
 })
 export class TabsComponent {
   @Input() tabs: Tab[] = [];

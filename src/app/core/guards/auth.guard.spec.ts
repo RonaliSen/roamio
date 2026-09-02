@@ -7,18 +7,24 @@ describe('authGuard', () => {
   function run() {
     return TestBed.runInInjectionContext(() => authGuard({} as any, {} as any));
   }
-  it('redirects to /login when unauthenticated', () => {
+  it('redirects to /login when unauthenticated', async () => {
     TestBed.configureTestingModule({
-      providers: [{ provide: AuthService, useValue: { isAuthed: () => false } }, Router],
+      providers: [
+        { provide: AuthService, useValue: { isAuthed: () => false, whenReady: Promise.resolve() } },
+        Router,
+      ],
     });
-    const result = run();
+    const result = await run();
     expect(result instanceof UrlTree).toBe(true);
     expect((result as UrlTree).toString()).toBe('/login');
   });
-  it('allows when authenticated', () => {
+  it('allows when authenticated', async () => {
     TestBed.configureTestingModule({
-      providers: [{ provide: AuthService, useValue: { isAuthed: () => true } }, Router],
+      providers: [
+        { provide: AuthService, useValue: { isAuthed: () => true, whenReady: Promise.resolve() } },
+        Router,
+      ],
     });
-    expect(run()).toBe(true);
+    expect(await run()).toBe(true);
   });
 });

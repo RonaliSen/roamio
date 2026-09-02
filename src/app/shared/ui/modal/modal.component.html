@@ -1,0 +1,28 @@
+@if (open) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <button
+      type="button"
+      class="fixed inset-0 bg-charcoal/40"
+      aria-label="Close dialog"
+      (click)="close()"
+    ></button>
+    <div
+      class="relative w-full max-w-lg bg-white p-8 shadow-lg"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="titleId"
+      cdkTrapFocus
+      [cdkTrapFocusAutoCapture]="true"
+    >
+      <div class="mb-4 flex items-start justify-between gap-4">
+        <h2 [id]="titleId" class="font-display text-2xl text-charcoal">{{ title }}</h2>
+        <button type="button" class="text-taupe" aria-label="Close dialog" (click)="close()">
+          &times;
+        </button>
+      </div>
+      <div class="font-ui text-sm text-charcoal">
+        <ng-content />
+      </div>
+    </div>
+  </div>
+}

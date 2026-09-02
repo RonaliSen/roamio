@@ -1,0 +1,23 @@
+<main class="flex min-h-screen items-center justify-center bg-ivory px-6 py-16">
+  <div class="w-full max-w-sm border border-champagne bg-white p-8">
+    <h1 class="font-display text-3xl text-charcoal">Welcome to Roamio</h1>
+    <p class="mt-1 font-ui text-sm text-taupe">Every journey, considered.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="mt-8 flex flex-col gap-5">
+      <app-input label="Email" type="email" formControlName="email" />
+      <app-input label="Password" type="password" formControlName="password" />
+
+      <app-button type="submit" variant="primary" [disabled]="loading() || form.invalid">
+        {{ mode() === 'signin' ? 'Sign in' : 'Create account' }}
+      </app-button>
+    </form>
+
+    <button
+      type="button"
+      (click)="toggleMode()"
+      class="mt-6 font-ui text-sm text-taupe underline hover:text-charcoal"
+    >
+      {{ mode() === 'signin' ? 'New here? Create account' : 'Have an account? Sign in' }}
+    </button>
+  </div>
+</main>

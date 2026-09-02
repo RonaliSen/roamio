@@ -4,13 +4,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   selector: 'app-skeleton',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div class="flex flex-col gap-3" aria-hidden="true">
-      @for (line of rows; track $index) {
-        <div class="h-4 w-full animate-pulse bg-surface"></div>
-      }
-    </div>
-  `,
+  templateUrl: './skeleton.component.html',
 })
 export class SkeletonComponent {
   rows: void[] = [];
