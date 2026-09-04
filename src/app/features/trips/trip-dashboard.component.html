@@ -1,4 +1,68 @@
-<section class="px-6 py-16">
-  <h1 class="font-display text-3xl text-charcoal">Your trip</h1>
-  <p class="font-ui text-taupe">Trip dashboard — coming soon.</p>
-</section>
+@if (tripDetail() === undefined) {
+  <section class="flex flex-col gap-6 px-6 py-16">
+    <app-skeleton [lines]="2" />
+    <app-skeleton [lines]="6" />
+  </section>
+} @else if (tripDetail() === null) {
+  <section class="flex flex-col gap-4 px-6 py-16">
+    <h1 class="font-display text-3xl text-charcoal">Trip not found</h1>
+    <p class="font-ui text-taupe">
+      This trip doesn't exist, or you don't have access to it.
+    </p>
+    <a routerLink="/discover" class="font-ui text-sm text-charcoal underline">Back to Discover</a>
+  </section>
+} @else {
+  <section class="flex flex-col gap-8 px-6 py-10">
+    <header
+      class="flex flex-wrap items-center justify-between gap-4 border-b border-champagne pb-6"
+    >
+      <div>
+        <h1 class="font-display text-3xl text-charcoal">
+          {{ destination()?.name ?? tripDetail()!.trip.destinationSlug }}
+        </h1>
+        <p class="font-ui text-sm text-taupe">
+          {{ formatDate(tripDetail()!.trip.startDate) }} –
+          {{ formatDate(tripDetail()!.trip.endDate) }} ·
+          {{ tripDetail()!.trip.travelers }}
+          {{ tripDetail()!.trip.travelers === 1 ? 'traveler' : 'travelers' }}
+        </p>
+      </div>
+
+      <div class="flex flex-col items-end font-ui">
+        <span class="font-display text-2xl text-charcoal">{{ readiness() }}%</span>
+        <span class="text-xs text-taupe">ready</span>
+      </div>
+    </header>
+
+    <app-tabs [tabs]="tabs" [active]="activeTab()" (activeChange)="activeTab.set($event)" />
+
+    @switch (activeTab()) {
+      @case ('itinerary') {
+        <app-itinerary [tripId]="id()" [days]="tripDetail()!.days" (changed)="reload()" />
+      }
+      @case ('weather') {
+        <app-weather-panel
+          [slug]="tripDetail()!.trip.destinationSlug"
+          [startDate]="tripDetail()!.trip.startDate"
+          [days]="tripDetail()!.days.length"
+          walkingIntensity="medium"
+        />
+        <!-- TODO: derive from itinerary activity categories once tracked -->
+      }
+      @case ('budget') {
+        <app-budget-panel
+          [tripId]="id()"
+          [budget]="tripDetail()!.budget"
+          [targetHint]="budgetTarget()"
+          (budgetChange)="onBudgetChange($event)"
+        />
+      }
+      @case ('wardrobe') {
+        <app-wardrobe-stub />
+      }
+      @case ('packing') {
+        <app-packing-stub />
+      }
+    }
+  </section>
+}

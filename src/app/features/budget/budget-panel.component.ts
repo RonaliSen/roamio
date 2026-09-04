@@ -42,7 +42,22 @@ export class BudgetPanelComponent {
   private readonly persist$ = new Subject<BudgetBreakdown>();
 
   @Input() tripId!: string;
-  @Input() targetHint?: number;
+
+  /**
+   * Backed by a signal (not a plain field) so `sliderMax` stays reactive to a
+   * `targetHint` that arrives *after* `budget` — e.g. a parent template that
+   * binds `[budget]` before `[targetHint]` in source order. A plain `@Input()`
+   * read once inside the `budget` setter would silently and permanently miss
+   * a hint that shows up on a later change-detection pass.
+   */
+  private readonly targetHintSig = signal<number | undefined>(undefined);
+  @Input() set targetHint(v: number | undefined) {
+    this.targetHintSig.set(v);
+  }
+  get targetHint(): number | undefined {
+    return this.targetHintSig();
+  }
+
   @Output() budgetChange = new EventEmitter<BudgetBreakdown>();
 
   readonly lineItems = LINE_ITEMS;
@@ -56,10 +71,14 @@ export class BudgetPanelComponent {
   });
   readonly total = computed(() => computeBudgetTotal(this.current()));
 
-  /** Slider range, fixed from the first budget this panel ever saw. */
-  private rangeInitialized = false;
-  readonly sliderMin = signal(0);
-  readonly sliderMax = signal(0);
+  /** Baseline total, fixed from the first budget this panel ever saw — the slider's
+   *  range shouldn't jump around as the user drags it or the budget rescales. */
+  private readonly baselineTotal = signal<number | undefined>(undefined);
+  readonly sliderMin = computed(() => Math.round((this.baselineTotal() ?? 0) * 0.5));
+  /** Reactive to both the baseline total AND `targetHint`, so a late-arriving hint still applies. */
+  readonly sliderMax = computed(() =>
+    Math.max(this.targetHintSig() ?? 0, Math.round((this.baselineTotal() ?? 0) * 1.5)),
+  );
 
   /**
    * Setter (not ngOnChanges) so a test setting `component.budget = ...`
@@ -69,11 +88,8 @@ export class BudgetPanelComponent {
    */
   @Input() set budget(b: BudgetBreakdown) {
     this.current.set(b);
-    if (!this.rangeInitialized) {
-      const total = computeBudgetTotal(b);
-      this.sliderMin.set(Math.round(total * 0.5));
-      this.sliderMax.set(Math.max(this.targetHint ?? 0, Math.round(total * 1.5)));
-      this.rangeInitialized = true;
+    if (this.baselineTotal() === undefined) {
+      this.baselineTotal.set(computeBudgetTotal(b));
     }
   }
   get budget(): BudgetBreakdown {

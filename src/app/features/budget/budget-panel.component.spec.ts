@@ -72,6 +72,19 @@ describe('BudgetPanelComponent', () => {
     expect(computeBudgetTotal(trips.updateBudget.calls.mostRecent().args[1])).toBe(800);
   }));
 
+  it('applies a targetHint bound after budget (out-of-order input assignment)', () => {
+    // Simulates a parent template binding [budget] before [targetHint] in
+    // source order — targetHint arrives on a later change-detection pass.
+    const other = TestBed.createComponent(BudgetPanelComponent);
+    const c = other.componentInstance;
+    c.tripId = 't2';
+    c.budget = { ...budget }; // total 1000 -> naive sliderMax would be 1500
+    c.targetHint = 5000;
+    other.detectChanges();
+
+    expect(c.sliderMax()).toBe(5000);
+  });
+
   it('toasts on a persistence failure without touching the emitted budget', fakeAsync(() => {
     trips.updateBudget.and.rejectWith(new Error('offline'));
     let emitted: any;
