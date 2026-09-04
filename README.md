@@ -1,59 +1,70 @@
-# Roamio
+# ROAMIO
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.32.
+*Every journey, considered.*
 
-## Development server
+A luxury travel concierge app — discovery, itinerary planning, weather-aware
+packing advice, and budget tracking in one place. Built as a portfolio piece
+to show a full Angular + Supabase product slice end to end: real auth, a real
+schema with row-level security, deterministic budget/readiness/weather
+engines, and a tested critical user path from landing page to a live trip
+dashboard.
 
-To start a local development server, run:
+**Stack:** Angular 20 (standalone components, signals), RxJS, Tailwind CSS v4,
+Supabase (Postgres + Auth + RLS), Playwright (e2e), Karma/Jasmine (unit).
 
-```bash
-ng serve
-```
+## Prerequisites
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node 22
+- Docker (for local Supabase)
+- npm
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Setup
 
 ```bash
-ng generate --help
+npm install
+npm run db:start   # starts local Supabase via Docker, prints a Studio URL
+npm start          # dev server at http://localhost:4200
 ```
 
-## Building
+That's it — `src/environments/environment.ts` already has the local Supabase
+URL and anon key (the well-known `supabase-demo` local dev key), so there's
+no key-pasting step. It only ever talks to your local Supabase instance.
 
-To build the project run:
+## Scripts
+
+| Script | Description |
+|---|---|
+| `npm start` | Run the dev server (`ng serve`) at `localhost:4200` |
+| `npm run build` | Production build to `dist/` |
+| `npm run watch` | Dev-config build in watch mode |
+| `npm test` | Unit tests (Karma/Jasmine) |
+| `npm run lint` | ESLint (`ng lint`) |
+| `npm run e2e` | Playwright end-to-end tests |
+| `npm run db:start` | Start local Supabase (Docker) |
+| `npm run db:stop` | Stop local Supabase |
+| `npm run db:reset` | Reset local DB and re-run migrations + seed |
+
+## Running the tests
 
 ```bash
-ng build
+# unit tests, headless, full suite
+npm test -- --watch=false --browsers=ChromeHeadless
+
+# e2e (needs local Supabase running; Playwright starts the dev server itself)
+npm run db:start
+npm run e2e
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## What's built / what's not yet
 
-## Running unit tests
+Built: destination discovery with filters, destination detail pages, a
+5-step trip wizard, a persisted itinerary with drag-and-drop reordering,
+weather-driven packing recommendations, an editable budget breakdown, a
+trip dashboard with a readiness score, and email/password auth with RLS
+so every user only ever sees their own trips.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Deferred (per the design spec — Phase 1 is mock-data-first): AI-assisted
+planning, the wardrobe/outfit builder, packing-list generation, and real
+weather/maps API integrations. Those areas currently show a stub or use
+fixture data. See [`docs/architecture.md`](docs/architecture.md) for the
+full picture, including which domains are fixture-backed vs Supabase-backed.
