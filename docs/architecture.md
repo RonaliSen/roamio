@@ -70,6 +70,11 @@ seam the future AI boundary (below) has to respect.
 | `datesInRange` | `core/services/trips.service.ts` | `(start: string, end: string) => string[]` | Inclusive list of `YYYY-MM-DD` dates between two dates, parsed as UTC so DST never drops/duplicates a day |
 | `rowToTrip` / `rowToTripActivity` / `rowToTripDay` / `rowToBudget` | `core/services/trips.service.ts` | `(row) => Model` | Pure snake_case-row → camelCase-model mappers, exported so they're unit-testable without hitting Supabase |
 
+Note: on the Trip Dashboard, `budgetTarget` is the destination's baseline cost
+estimate for this trip's length — not the user's own chosen budget from the
+wizard. A user who deliberately books above the destination average will see
+a lower budget-readiness score by design.
+
 ## AI boundary (future, not built)
 
 No AI is wired into this build. When it is added, the intended shape is:
@@ -117,5 +122,5 @@ Three migrations, applied in order (`supabase/migrations/`):
 | File | Purpose |
 |---|---|
 | `0001_core_schema.sql` | Creates all 10 tables: `profiles`, `destinations`, `trips`, `trip_days`, `activities`, `budgets`, `wardrobe_items`, `outfits`, `outfit_items`, `packing_items`, plus indexes on the common lookup columns (`trips.user_id`, `trip_days.trip_id`, `activities.trip_day_id`) |
-| `0002_rls_policies.sql` | Enables RLS on every table; owner-only `using/with check (auth.uid() = user_id)` policy per user-owned table (`outfit_items` checks ownership via its parent `outfits` row since it has no `user_id` column itself); `destinations` gets a public `select`-only policy; a `handle_new_user()` trigger auto-inserts a `profiles` row on signup |
+| `0002_rls_policies.sql` | Enables RLS on every table; owner-only `using/with check (auth.uid() = user_id)` policy per user-owned table (`profiles` is the exception — it keys on `id`, the row's own primary key, since that already *is* the user's id, so its policy checks `auth.uid() = id`; `outfit_items` checks ownership via its parent `outfits` row since it has no `user_id` column itself); `destinations` gets a public `select`-only policy; a `handle_new_user()` trigger auto-inserts a `profiles` row on signup |
 | `0003_seed_destinations.sql` | Seeds the 6 launch destinations (Prague, Lisbon, Kyoto, Reykjavik, Marrakech, Amalfi) into `destinations` — used by local dev/e2e; the app itself reads destinations from the fixture, not this table, in this phase |
