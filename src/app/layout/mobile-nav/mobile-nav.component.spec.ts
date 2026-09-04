@@ -15,10 +15,10 @@ describe('MobileNavComponent', () => {
     fixture.detectChanges();
   });
 
-  it('renders nav links to /, /discover and /trips', () => {
+  it('renders nav links to / and /discover', () => {
     const hrefs = Array.from(
       (fixture.nativeElement as HTMLElement).querySelectorAll('a'),
     ).map((a) => a.getAttribute('href'));
-    expect(hrefs).toEqual(['/', '/discover', '/trips']);
+    expect(hrefs).toEqual(['/', '/discover']);
   });
 });

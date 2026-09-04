@@ -11,9 +11,6 @@
       <svg lucideCompass [size]="16"></svg>
       Discover
     </a>
-    <a routerLink="/trips" routerLinkActive="text-charcoal" class="hover:text-charcoal">
-      My Trips
-    </a>
     @if (auth.isAuthed()) {
       <button type="button" (click)="signOut()" class="hover:text-charcoal">Sign out</button>
     } @else {
