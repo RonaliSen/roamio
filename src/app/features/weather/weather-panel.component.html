@@ -1,0 +1,29 @@
+<section class="flex flex-col gap-4">
+  <h3 class="font-display text-lg text-charcoal">Weather</h3>
+
+  @if (forecast().length === 0) {
+    <p class="font-ui text-sm text-taupe">No forecast available.</p>
+  } @else {
+    <div class="flex flex-wrap gap-3">
+      @for (w of forecast(); track w.date) {
+        <div class="flex flex-col items-center gap-1 border border-taupe/40 bg-white px-4 py-3">
+          <span class="font-ui text-xs text-taupe">{{ shortDate(w.date) }}</span>
+          <span class="font-ui text-lg" aria-hidden="true">{{ conditionIcon(w.condition) }}</span>
+          <span class="font-ui text-xs text-charcoal capitalize">{{ w.condition }}</span>
+          <span class="font-ui text-sm text-charcoal">{{ w.tempHighC }}°/{{ w.tempLowC }}°</span>
+        </div>
+      }
+    </div>
+
+    <ul class="flex flex-col gap-2">
+      @for (r of recommendations(); track r.id) {
+        <li class="border-l-2 border-champagne pl-3">
+          <p class="font-ui text-sm text-charcoal">{{ r.label }}</p>
+          <p class="font-ui text-xs text-taupe">{{ r.reason }}</p>
+        </li>
+      } @empty {
+        <li class="font-ui text-sm text-taupe">No special recommendations.</li>
+      }
+    </ul>
+  }
+</section>

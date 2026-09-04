@@ -1,0 +1,34 @@
+<section class="flex flex-col gap-5">
+  <h3 class="font-display text-lg text-charcoal">Budget</h3>
+
+  <dl class="flex flex-col gap-2">
+    @for (line of lineItems; track line.key) {
+      <div class="flex flex-col gap-1">
+        <div class="flex justify-between font-ui text-sm text-charcoal">
+          <dt>{{ line.label }}</dt>
+          <dd>{{ current()[line.key] | number: '1.0-0' }}</dd>
+        </div>
+        <div class="h-1.5 w-full bg-surface">
+          <div class="h-1.5 bg-champagne" [style.width.%]="pct(line.key)"></div>
+        </div>
+      </div>
+    }
+  </dl>
+
+  <p class="font-display text-2xl text-charcoal">
+    {{ total() | number: '1.0-0' }} <span class="font-ui text-sm text-taupe">total</span>
+  </p>
+
+  <label for="budget-slider" class="flex flex-col gap-1.5 font-ui text-sm text-charcoal">
+    <span>Adjust total budget</span>
+    <input
+      id="budget-slider"
+      type="range"
+      [min]="sliderMin()"
+      [max]="sliderMax()"
+      [value]="total()"
+      (input)="onSlider(+$any($event.target).value)"
+      class="w-full accent-charcoal"
+    />
+  </label>
+</section>
