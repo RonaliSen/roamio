@@ -42,4 +42,34 @@ describe('ModalComponent', () => {
     backdrop?.click();
     expect(emitted).toEqual([false]);
   });
+
+  it('does not re-capture focus when only title changes while open', () => {
+    const trigger = document.createElement('button');
+    document.body.appendChild(trigger);
+    trigger.focus();
+
+    fixture.componentRef.setInput('open', true);
+    fixture.componentRef.setInput('title', 'Original');
+    fixture.detectChanges();
+
+    expect((fixture.componentInstance as unknown as { previouslyFocused: unknown }).previouslyFocused).toBe(
+      trigger,
+    );
+
+    // focus moves elsewhere (e.g. into the modal's own content) while the modal stays open
+    const decoy = document.createElement('button');
+    document.body.appendChild(decoy);
+    decoy.focus();
+
+    fixture.componentRef.setInput('title', 'Changed');
+    fixture.detectChanges();
+
+    // the title-only change must not re-run focus capture — it should still be the original trigger
+    expect((fixture.componentInstance as unknown as { previouslyFocused: unknown }).previouslyFocused).toBe(
+      trigger,
+    );
+
+    document.body.removeChild(trigger);
+    document.body.removeChild(decoy);
+  });
 });

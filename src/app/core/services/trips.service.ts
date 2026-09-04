@@ -201,10 +201,11 @@ export class TripsService {
 
   async addActivity(tripDayId: string, a: NewActivity): Promise<TripActivity> {
     const userId = await this.userId();
-    const { count } = await supabase
+    const { count, error: countError } = await supabase
       .from('activities')
       .select('id', { count: 'exact', head: true })
       .eq('trip_day_id', tripDayId);
+    if (countError) throw countError;
 
     const inserted = this.unwrap(
       await supabase

@@ -7,6 +7,7 @@ import {
   Input,
   OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 
 let uid = 0;
@@ -32,7 +33,8 @@ export class ModalComponent implements OnChanges {
     if (this.open) this.close();
   }
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['open']) return;
     if (this.open) {
       this.previouslyFocused = document.activeElement as HTMLElement | null;
     } else {
