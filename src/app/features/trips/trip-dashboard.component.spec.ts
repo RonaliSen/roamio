@@ -103,6 +103,26 @@ describe('TripDashboardComponent', () => {
     expect(fixture.componentInstance.tripDetail()).toBeNull();
   }));
 
+  it('keeps a loaded trip and shows a toast when a background reload() fails', fakeAsync(() => {
+    trips.get.and.resolveTo(tripFixture());
+    const fixture = createFixture();
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.tripDetail()).not.toBeNull();
+
+    trips.get.and.rejectWith(new Error('network blip'));
+    fixture.componentInstance.reload();
+    tick();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.tripDetail()).not.toBeNull();
+    expect(fixture.componentInstance.tripDetail()).toEqual(tripFixture());
+    const toast = TestBed.inject(ToastService);
+    expect(toast.show).toHaveBeenCalledWith('Could not refresh trip', 'error');
+  }));
+
   it('renders all five tabs', fakeAsync(() => {
     trips.get.and.resolveTo(tripFixture());
     const fixture = createFixture();

@@ -17,6 +17,7 @@ import { PackingStubComponent } from '../packing/packing-stub.component';
 import { WardrobeStubComponent } from '../wardrobe/wardrobe-stub.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { TabsComponent } from '../../shared/ui/tabs/tabs.component';
+import { ToastService } from '../../shared/ui/toast/toast.service';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -48,6 +49,7 @@ const TABS = [
 export class TripDashboardComponent {
   private readonly tripsService = inject(TripsService);
   private readonly destinationsService = inject(DestinationsService);
+  private readonly toast = inject(ToastService);
 
   readonly id = toSignal(
     inject(ActivatedRoute).paramMap.pipe(map((p) => p.get('id') ?? '')),
@@ -114,7 +116,11 @@ export class TripDashboardComponent {
         .pipe(take(1))
         .subscribe((d) => this.destination.set(d));
     } catch {
-      this.tripDetail.set(null);
+      if (this.tripDetail() === undefined) {
+        this.tripDetail.set(null);
+      } else {
+        this.toast.show('Could not refresh trip', 'error');
+      }
     }
   }
 }
