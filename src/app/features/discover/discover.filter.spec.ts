@@ -1,7 +1,8 @@
+import type { Destination } from '../../core/models/destination.model';
 import { applyDiscoverFilters } from './discover.filter';
-const D = [
-  { slug: 'prague', name: 'Prague', country: 'Czech Republic', summary: 'spires', heroImage: '', bestMonths: [4,5], styleTags: ['culture','walkable'], dailyBudgetLow: 90, dailyBudgetHigh: 180 },
-  { slug: 'reykjavik', name: 'Reykjavik', country: 'Iceland', summary: 'aurora', heroImage: '', bestMonths: [7,8], styleTags: ['nature'], dailyBudgetLow: 150, dailyBudgetHigh: 300 },
+const D: Destination[] = [
+  { slug: 'prague', name: 'Prague', country: 'Czech Republic', region: 'Europe', summary: 'spires', heroImage: '', bestMonths: [4,5], styleTags: ['culture','walkable'], dailyBudgetLow: 90, dailyBudgetHigh: 180 },
+  { slug: 'reykjavik', name: 'Reykjavik', country: 'Iceland', region: 'Europe', summary: 'aurora', heroImage: '', bestMonths: [7,8], styleTags: ['nature'], dailyBudgetLow: 150, dailyBudgetHigh: 300 },
 ];
 describe('applyDiscoverFilters', () => {
   it('matches query against tags', () => {
