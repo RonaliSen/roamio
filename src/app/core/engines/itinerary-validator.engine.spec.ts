@@ -17,4 +17,10 @@ describe('validateItinerary', () => {
     expect(valid).toBe(true);
     expect(repaired).toEqual(days);
   });
+  it('treats fewer activities than days as valid sparse, not broken (no fix is possible)', () => {
+    const days = [{ dayIndex: 0, activities: [{ title: 'A', category: 'x' }] }, { dayIndex: 1, activities: [] }];
+    const { valid, repaired } = validateItinerary(days);
+    expect(valid).toBe(true);
+    expect(repaired).toEqual(days);
+  });
 });
