@@ -33,6 +33,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'plan/feasibility',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/plan/feasibility/feasibility.component').then(
+        (m) => m.FeasibilityComponent,
+      ),
+  },
+  {
     path: 'trips/new',
     canActivate: [authGuard],
     loadComponent: () =>

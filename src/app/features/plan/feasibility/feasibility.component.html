@@ -1,0 +1,55 @@
+<section class="mx-auto max-w-2xl px-6 py-12">
+  <h1 class="font-display text-3xl text-charcoal">Feasibility check</h1>
+
+  @if (checking()) {
+    <p class="mt-2 font-ui text-taupe">Checking your trip...</p>
+    <div class="mt-8 flex flex-col gap-4 border border-champagne bg-surface p-6">
+      <app-skeleton [lines]="3" />
+      <app-skeleton [lines]="2" />
+    </div>
+  } @else if (store.feasibility(); as feasibility) {
+    <div class="mt-8 flex flex-col gap-4 border border-champagne bg-surface p-6">
+      <p class="font-ui text-sm text-charcoal">
+        Estimated cost: €{{ feasibility.estimatedCostRange.low }}–€{{ feasibility.estimatedCostRange.high }}
+      </p>
+      <p class="font-ui text-sm text-charcoal">Travel intensity: {{ feasibility.travelIntensity }}</p>
+      <p class="font-ui text-sm text-charcoal">
+        Weather: {{ feasibility.weatherSuitable ? 'Suitable' : 'Not ideal' }}
+      </p>
+      @for (reason of feasibility.reasons; track reason) {
+        <p class="font-ui text-sm text-taupe">{{ reason }}</p>
+      }
+    </div>
+
+    @if (feasibility.status === 'green') {
+      <div class="mt-6">
+        <app-button data-testid="show-destinations" (click)="goToRecommendations()">
+          Show destinations →
+        </app-button>
+      </div>
+    } @else if (feasibility.status === 'amber') {
+      <div class="mt-6 flex gap-3">
+        <app-button variant="ghost" routerLink="/plan/understand">Adjust trip</app-button>
+        <app-button data-testid="show-destinations" (click)="goToRecommendations()">
+          Continue anyway
+        </app-button>
+      </div>
+    } @else {
+      <div class="mt-6 flex flex-col gap-4">
+        <div class="flex flex-wrap gap-2">
+          @for (alt of feasibility.alternatives; track alt.label; let i = $index) {
+            <button
+              type="button"
+              [attr.data-testid]="'alternative-' + i"
+              (click)="applyAlternative(alt)"
+              class="border border-charcoal px-4 py-2 font-ui text-sm text-charcoal transition-shadow hover:shadow-lg"
+            >
+              {{ alt.label }}
+            </button>
+          }
+        </div>
+        <app-button variant="ghost" routerLink="/plan/understand">Modify my request</app-button>
+      </div>
+    }
+  }
+</section>
