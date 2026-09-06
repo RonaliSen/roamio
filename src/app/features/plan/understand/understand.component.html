@@ -1,0 +1,139 @@
+<section class="mx-auto max-w-2xl px-6 py-12">
+  <h1 class="font-display text-3xl text-charcoal">Understanding your trip</h1>
+  <p class="mt-2 font-ui text-taupe">
+    Here's what I understood from your request. You can edit anything before we check
+    feasibility.
+  </p>
+
+  <form [formGroup]="form" class="mt-8 flex flex-col gap-6 border border-champagne bg-surface p-6">
+    <label class="flex flex-col gap-1.5 font-ui text-sm text-charcoal">
+      <span>Region</span>
+      <select
+        formControlName="region"
+        class="border-b border-taupe bg-transparent px-1 py-2 text-base text-charcoal outline-none focus:border-champagne"
+      >
+        <option value="">Open to suggestions</option>
+        @for (region of regions; track region) {
+          <option [value]="region">{{ region }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="flex flex-col gap-1.5 font-ui text-sm text-charcoal">
+      <span>Month</span>
+      <select
+        formControlName="month"
+        class="border-b border-taupe bg-transparent px-1 py-2 text-base text-charcoal outline-none focus:border-champagne"
+      >
+        <option [ngValue]="null">Flexible</option>
+        @for (month of months; track month.value) {
+          <option [ngValue]="month.value">{{ month.label }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="flex flex-col gap-1.5 font-ui text-sm text-charcoal">
+      <span>Duration (days)</span>
+      <input
+        type="number"
+        formControlName="durationDays"
+        class="border-b border-taupe bg-transparent px-1 py-2 text-base text-charcoal outline-none focus:border-champagne"
+      />
+    </label>
+
+    <label class="flex flex-col gap-1.5 font-ui text-sm text-charcoal">
+      <span>Travelers</span>
+      <input
+        type="number"
+        formControlName="travelers"
+        class="border-b border-taupe bg-transparent px-1 py-2 text-base text-charcoal outline-none focus:border-champagne"
+      />
+    </label>
+
+    <label class="flex flex-col gap-1.5 font-ui text-sm text-charcoal">
+      <span>Budget (EUR)</span>
+      <input
+        type="number"
+        formControlName="budgetAmount"
+        class="border-b border-taupe bg-transparent px-1 py-2 text-base text-charcoal outline-none focus:border-champagne"
+      />
+    </label>
+
+    <div class="flex flex-col gap-2">
+      <span class="font-ui text-sm text-charcoal">Travel style</span>
+      <div class="flex flex-wrap gap-2">
+        @for (chip of travelStyle(); track chip) {
+          <span class="flex items-center gap-1 border border-taupe px-2 py-1 font-ui text-sm text-charcoal">
+            {{ chip }}
+            <button type="button" class="text-taupe" (click)="removeChip('travelStyle', chip)">×</button>
+          </span>
+        }
+      </div>
+      <div class="flex gap-2">
+        <input
+          #styleInput
+          type="text"
+          class="flex-1 border-b border-taupe bg-transparent px-1 py-2 text-base text-charcoal outline-none focus:border-champagne"
+          placeholder="e.g. romantic"
+        />
+        <app-button
+          variant="ghost"
+          (click)="addChip('travelStyle', styleInput.value); styleInput.value = ''"
+          >Add</app-button
+        >
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <span class="font-ui text-sm text-charcoal">Preferences</span>
+      <div class="flex flex-wrap gap-2">
+        @for (chip of preferences(); track chip) {
+          <span class="flex items-center gap-1 border border-taupe px-2 py-1 font-ui text-sm text-charcoal">
+            {{ chip }}
+            <button type="button" class="text-taupe" (click)="removeChip('preferences', chip)">×</button>
+          </span>
+        }
+      </div>
+      <div class="flex gap-2">
+        <input
+          #prefInput
+          type="text"
+          class="flex-1 border-b border-taupe bg-transparent px-1 py-2 text-base text-charcoal outline-none focus:border-champagne"
+          placeholder="e.g. quiet"
+        />
+        <app-button
+          variant="ghost"
+          (click)="addChip('preferences', prefInput.value); prefInput.value = ''"
+          >Add</app-button
+        >
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <span class="font-ui text-sm text-charcoal">Interests</span>
+      <div class="flex flex-wrap gap-2">
+        @for (chip of interests(); track chip) {
+          <span class="flex items-center gap-1 border border-taupe px-2 py-1 font-ui text-sm text-charcoal">
+            {{ chip }}
+            <button type="button" class="text-taupe" (click)="removeChip('interests', chip)">×</button>
+          </span>
+        }
+      </div>
+      <div class="flex gap-2">
+        <input
+          #interestInput
+          type="text"
+          class="flex-1 border-b border-taupe bg-transparent px-1 py-2 text-base text-charcoal outline-none focus:border-champagne"
+          placeholder="e.g. food"
+        />
+        <app-button
+          variant="ghost"
+          (click)="addChip('interests', interestInput.value); interestInput.value = ''"
+          >Add</app-button
+        >
+      </div>
+    </div>
+
+    <app-button (click)="confirm()">Looks right →</app-button>
+  </form>
+</section>

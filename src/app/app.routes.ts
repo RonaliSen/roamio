@@ -25,6 +25,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'plan/understand',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/plan/understand/understand.component').then(
+        (m) => m.UnderstandComponent,
+      ),
+  },
+  {
     path: 'trips/new',
     canActivate: [authGuard],
     loadComponent: () =>
