@@ -64,4 +64,44 @@ describe('LoginComponent', () => {
     await fixture.componentInstance.submit();
     expect(show).toHaveBeenCalledWith('Invalid credentials', 'error');
   });
+
+  it('shows a success toast and no error toast after account creation', async () => {
+    fixture.componentInstance.toggleMode();
+    fixture.componentInstance.form.setValue({ email: 'a@b.com', password: 'secret1' });
+    await fixture.componentInstance.submit();
+    expect(show).toHaveBeenCalledWith('Account created — welcome to Roamio!', 'info');
+    expect(show).not.toHaveBeenCalledWith(jasmine.any(String), 'error');
+  });
+
+  it('shows no success toast on plain sign-in', async () => {
+    fixture.componentInstance.form.setValue({ email: 'a@b.com', password: 'secret1' });
+    await fixture.componentInstance.submit();
+    expect(show).not.toHaveBeenCalled();
+  });
+
+  it('shows an inline error once the email field is touched and invalid', () => {
+    const control = fixture.componentInstance.form.controls.email;
+    expect(fixture.componentInstance.emailError).toBeUndefined();
+    control.markAsTouched();
+    expect(fixture.componentInstance.emailError).toBe('Email is required');
+    control.setValue('not-an-email');
+    expect(fixture.componentInstance.emailError).toBe('Enter a valid email address');
+  });
+
+  it('shows an inline error once the password field is touched and invalid', () => {
+    const control = fixture.componentInstance.form.controls.password;
+    control.markAsTouched();
+    expect(fixture.componentInstance.passwordError).toBe('Password is required');
+    control.setValue('abc');
+    expect(fixture.componentInstance.passwordError).toBe('Password must be at least 6 characters');
+    control.setValue('abcdef');
+    expect(fixture.componentInstance.passwordError).toBeUndefined();
+  });
+
+  it('marks all fields touched when submit is attempted while invalid', async () => {
+    await fixture.componentInstance.submit();
+    expect(fixture.componentInstance.form.controls.email.touched).toBe(true);
+    expect(fixture.componentInstance.form.controls.password.touched).toBe(true);
+    expect(signIn).not.toHaveBeenCalled();
+  });
 });

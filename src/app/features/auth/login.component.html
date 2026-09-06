@@ -4,8 +4,8 @@
     <p class="mt-1 font-ui text-sm text-taupe">Every journey, considered.</p>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="mt-8 flex flex-col gap-5">
-      <app-input label="Email" type="email" formControlName="email" />
-      <app-input label="Password" type="password" formControlName="password" />
+      <app-input label="Email" type="email" formControlName="email" [error]="emailError" />
+      <app-input label="Password" type="password" formControlName="password" [error]="passwordError" />
 
       <app-button type="submit" variant="primary" [disabled]="loading() || form.invalid">
         {{ mode() === 'signin' ? 'Sign in' : 'Create account' }}

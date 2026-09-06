@@ -33,20 +33,39 @@ export class LoginComponent {
     this.mode.update((m) => (m === 'signin' ? 'signup' : 'signin'));
   }
 
+  get emailError(): string | undefined {
+    const c = this.form.controls.email;
+    if (!c.touched && !c.dirty) return undefined;
+    if (c.hasError('required')) return 'Email is required';
+    if (c.hasError('email')) return 'Enter a valid email address';
+    return undefined;
+  }
+
+  get passwordError(): string | undefined {
+    const c = this.form.controls.password;
+    if (!c.touched && !c.dirty) return undefined;
+    if (c.hasError('required')) return 'Password is required';
+    if (c.hasError('minlength')) return 'Password must be at least 6 characters';
+    return undefined;
+  }
+
   async submit(): Promise<void> {
     if (this.form.invalid || this.loading()) {
+      this.form.markAllAsTouched();
       return;
     }
     this.loading.set(true);
     const { email, password } = this.form.getRawValue();
+    const mode = this.mode();
     try {
       const { error } =
-        this.mode() === 'signin'
-          ? await this.auth.signIn(email, password)
-          : await this.auth.signUp(email, password);
+        mode === 'signin' ? await this.auth.signIn(email, password) : await this.auth.signUp(email, password);
       if (error) {
         this.toast.show(error.message, 'error');
         return;
+      }
+      if (mode === 'signup') {
+        this.toast.show('Account created — welcome to Roamio!', 'info');
       }
       await this.router.navigateByUrl('/discover');
     } catch (err) {
