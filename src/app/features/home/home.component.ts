@@ -43,6 +43,6 @@ export class HomeComponent {
   readonly skeletons = [0, 1, 2];
 
   onSearch(term: string): void {
-    this.router.navigate(['/discover'], { queryParams: { q: term } });
+    this.router.navigate(['/plan/understand'], { state: { message: term } });
   }
 }

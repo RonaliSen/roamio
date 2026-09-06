@@ -15,6 +15,6 @@ describe('HomeComponent', () => {
   it('navigates to discover with the query on search', () => {
     const nav = spyOn(TestBed.inject(Router), 'navigate');
     fixture.componentInstance.onSearch('prague in spring');
-    expect(nav).toHaveBeenCalledWith(['/discover'], { queryParams: { q: 'prague in spring' } });
+    expect(nav).toHaveBeenCalledWith(['/plan/understand'], { state: { message: 'prague in spring' } });
   });
 });
