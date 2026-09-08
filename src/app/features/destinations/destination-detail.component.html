@@ -13,6 +13,17 @@
       </div>
     </section>
 
+    @if (recommendationReasons(); as reasons) {
+      <section class="mx-auto max-w-3xl px-6 py-4">
+        <h2 class="font-display text-xl text-charcoal">Why Roamio recommends it</h2>
+        <ul class="mt-2 flex flex-col gap-1">
+          @for (reason of reasons; track reason) {
+            <li class="font-ui text-sm text-taupe">✓ {{ reason }}</li>
+          }
+        </ul>
+      </section>
+    }
+
     <section class="mx-auto max-w-4xl px-6">
       <dl class="grid gap-4 border-y border-champagne py-6 font-ui text-sm sm:grid-cols-3">
         <div>

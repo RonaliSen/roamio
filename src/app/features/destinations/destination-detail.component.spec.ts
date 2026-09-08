@@ -2,15 +2,23 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 
+import { DESTINATIONS } from '../../fixtures/destinations.fixture';
+import { TripPlannerStore } from '../../core/services/trip-planner-store.service';
 import { DestinationDetailComponent } from './destination-detail.component';
 
 describe('DestinationDetailComponent', () => {
-  async function setup(slug: string) {
+  async function setup(slug: string, queryParams: Record<string, string> = {}) {
     await TestBed.configureTestingModule({
       imports: [DestinationDetailComponent],
       providers: [
         provideRouter([]),
-        { provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap({ slug })) } },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            paramMap: of(convertToParamMap({ slug })),
+            queryParamMap: of(convertToParamMap(queryParams)),
+          },
+        },
       ],
     }).compileComponents();
     const fixture = TestBed.createComponent(DestinationDetailComponent);
@@ -55,5 +63,26 @@ describe('DestinationDetailComponent', () => {
     const fixture = await setup('atlantis');
     expect(text(fixture)).toContain('Destination not found');
     expect(fixture.nativeElement.querySelector('a[href="/discover"]')).toBeTruthy();
+  });
+
+  it('shows why-recommended reasons when arriving from the planner with a matching store entry', async () => {
+    const prague = DESTINATIONS.find((d) => d.slug === 'prague')!;
+    const fixture = await setup('prague', { fromPlan: '1' });
+    const store = TestBed.inject(TripPlannerStore);
+    store.setMatches([
+      { destination: prague, score: 94, reasons: ['In your preferred region', 'Great weather in your travel month'] },
+    ]);
+    fixture.detectChanges();
+    expect(text(fixture)).toContain('Why Roamio recommends it');
+    expect(text(fixture)).toContain('In your preferred region');
+  });
+
+  it('shows nothing extra when there is no fromPlan query param', async () => {
+    const prague = DESTINATIONS.find((d) => d.slug === 'prague')!;
+    const fixture = await setup('prague');
+    const store = TestBed.inject(TripPlannerStore);
+    store.setMatches([{ destination: prague, score: 94, reasons: ['In your preferred region'] }]);
+    fixture.detectChanges();
+    expect(text(fixture)).not.toContain('Why Roamio recommends it');
   });
 });

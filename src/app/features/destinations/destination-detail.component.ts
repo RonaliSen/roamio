@@ -8,6 +8,7 @@ import { computeBudgetTotal, estimateBudget } from '../../core/engines/budget.en
 import type { WeatherDay } from '../../core/models/weather.model';
 import { ActivitiesService } from '../../core/services/activities.service';
 import { DestinationsService } from '../../core/services/destinations.service';
+import { TripPlannerStore } from '../../core/services/trip-planner-store.service';
 import { WeatherService } from '../../core/services/weather.service';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { CardComponent } from '../../shared/ui/card/card.component';
@@ -30,10 +31,15 @@ export class DestinationDetailComponent {
   private readonly destinationsService = inject(DestinationsService);
   private readonly weatherService = inject(WeatherService);
   private readonly activitiesService = inject(ActivitiesService);
+  private readonly plannerStore = inject(TripPlannerStore);
 
   private readonly slug$ = this.route.paramMap.pipe(map((p) => p.get('slug') ?? ''));
 
   readonly slug = toSignal(this.slug$, { initialValue: '' });
+
+  private readonly fromPlan$ = this.route.queryParamMap.pipe(map((q) => q.get('fromPlan') === '1'));
+
+  readonly fromPlan = toSignal(this.fromPlan$, { initialValue: false });
 
   readonly destination = toSignal(
     this.slug$.pipe(switchMap((s) => this.destinationsService.getBySlug(s))),
@@ -69,6 +75,12 @@ export class DestinationDetailComponent {
   });
 
   readonly itinerary = computed(() => this.activities().slice(0, 3));
+
+  readonly recommendationReasons = computed(() => {
+    if (!this.fromPlan()) return null;
+    const match = this.plannerStore.matches().find((m) => m.destination.slug === this.slug());
+    return match ? match.reasons : null;
+  });
 
   buildTrip(): void {
     this.router.navigate(['/trips/new'], { queryParams: { destination: this.slug() } });
