@@ -1,3 +1,5 @@
+<app-planner-stepper current="understand" />
+
 <section class="mx-auto max-w-2xl px-6 py-12">
   <h1 class="font-display text-3xl text-charcoal">Understanding your trip</h1>
   <p class="mt-2 font-ui text-taupe">
@@ -5,7 +7,7 @@
     feasibility.
   </p>
 
-  <form [formGroup]="form" class="mt-8 flex flex-col gap-6 border border-champagne bg-surface p-6">
+  <form [formGroup]="form" class="mt-8 flex flex-col gap-6 rounded-xl border border-champagne bg-surface p-6 shadow-sm">
     <label class="flex flex-col gap-1.5 font-ui text-sm text-charcoal">
       <span>Region</span>
       <select

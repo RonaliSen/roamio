@@ -1,0 +1,29 @@
+<header class="flex items-center justify-between border-b border-champagne bg-white px-6 py-4">
+  <span class="font-display text-lg text-charcoal">ROAMIO</span>
+
+  <ol class="flex items-center gap-3 font-ui text-sm">
+    @for (step of steps; track step.id; let last = $last) {
+      <li class="flex items-center gap-3">
+        <span class="flex items-center gap-2" [class.text-charcoal]="isCurrent(step.id) || isDone(step.id)" [class.text-taupe]="!isCurrent(step.id) && !isDone(step.id)">
+          <span
+            class="flex h-6 w-6 items-center justify-center rounded-full border text-xs"
+            [class.border-charcoal]="isCurrent(step.id) || isDone(step.id)"
+            [class.bg-charcoal]="isDone(step.id)"
+            [class.text-white]="isDone(step.id)"
+            [class.border-taupe]="!isCurrent(step.id) && !isDone(step.id)"
+          >
+            @if (isDone(step.id)) { ✓ } @else { {{ $index + 1 }} }
+          </span>
+          {{ step.label }}
+        </span>
+        @if (!last) {
+          <span class="h-px w-8 bg-champagne"></span>
+        }
+      </li>
+    }
+  </ol>
+
+  <span class="flex h-9 w-9 items-center justify-center rounded-full border border-champagne bg-surface text-taupe">
+    <svg lucideUser [size]="18"></svg>
+  </span>
+</header>

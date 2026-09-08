@@ -1,14 +1,16 @@
+<app-planner-stepper current="feasibility" />
+
 <section class="mx-auto max-w-2xl px-6 py-12">
   <h1 class="font-display text-3xl text-charcoal">Feasibility check</h1>
 
   @if (checking()) {
     <p class="mt-2 font-ui text-taupe">Checking your trip...</p>
-    <div class="mt-8 flex flex-col gap-4 border border-champagne bg-surface p-6">
+    <div class="mt-8 flex flex-col gap-4 rounded-xl border border-champagne bg-surface p-6 shadow-sm">
       <app-skeleton [lines]="3" />
       <app-skeleton [lines]="2" />
     </div>
   } @else if (store.feasibility(); as feasibility) {
-    <div class="mt-8 flex flex-col gap-4 border border-champagne bg-surface p-6">
+    <div class="mt-8 flex flex-col gap-4 rounded-xl border border-champagne bg-surface p-6 shadow-sm">
       <p class="font-ui text-sm text-charcoal">
         Estimated cost: €{{ feasibility.estimatedCostRange.low }}–€{{ feasibility.estimatedCostRange.high }}
       </p>

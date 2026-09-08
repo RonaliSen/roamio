@@ -8,11 +8,12 @@ import { checkFeasibility } from '../../../core/engines/feasibility.engine';
 import type { TripIntent } from '../../../core/models/trip-intent.model';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
+import { PlannerStepperComponent } from '../../../shared/ui/planner-stepper/planner-stepper.component';
 
 @Component({
   selector: 'app-feasibility',
   standalone: true,
-  imports: [ButtonComponent, SkeletonComponent],
+  imports: [ButtonComponent, SkeletonComponent, PlannerStepperComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './feasibility.component.html',
   styleUrl: './feasibility.component.css',

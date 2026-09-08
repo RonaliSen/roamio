@@ -9,6 +9,7 @@ import { TripPlannerStore } from '../../../core/services/trip-planner-store.serv
 import { TripsService } from '../../../core/services/trips.service';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { PlannerStepperComponent } from '../../../shared/ui/planner-stepper/planner-stepper.component';
 
 const DAY_MS = 86400000;
 /** ponytail: nominal lead time until we build a real date picker (out of scope, see brief). */
@@ -30,7 +31,7 @@ function isoPlusDays(iso: string, days: number): string {
 @Component({
   selector: 'app-confirm',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, PlannerStepperComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './confirm.component.html',
   styleUrl: './confirm.component.css',

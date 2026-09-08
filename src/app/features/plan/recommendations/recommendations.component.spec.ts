@@ -43,4 +43,9 @@ describe('RecommendationsComponent', () => {
     await setup(null);
     expect(nav).toHaveBeenCalledWith(['/']);
   });
+
+  it('renders the planner stepper', async () => {
+    await setup({ region: 'Europe', month: 5, travelStyle: [], preferences: [], interests: [], missingInformation: [], confidence: 0.9 });
+    expect(fixture.nativeElement.querySelector('app-planner-stepper')).toBeTruthy();
+  });
 });

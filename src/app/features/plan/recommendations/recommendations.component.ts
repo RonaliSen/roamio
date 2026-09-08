@@ -8,11 +8,12 @@ import { rankDestinations } from '../../../core/engines/recommend.engine';
 import type { DestinationMatch } from '../../../core/models/trip-intent.model';
 import { CardComponent } from '../../../shared/ui/card/card.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { PlannerStepperComponent } from '../../../shared/ui/planner-stepper/planner-stepper.component';
 
 @Component({
   selector: 'app-recommendations',
   standalone: true,
-  imports: [CardComponent, ButtonComponent],
+  imports: [CardComponent, ButtonComponent, PlannerStepperComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './recommendations.component.html',
   styleUrl: './recommendations.component.css',

@@ -34,6 +34,12 @@ describe('UnderstandComponent', () => {
     expect(component.form.value.durationDays).toBe(4);
   });
 
+  it('renders the planner stepper', async () => {
+    await setup('romantic 4 days in Europe');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-planner-stepper')).toBeTruthy();
+  });
+
   it('looks-right navigates to /plan/feasibility and stores the intent', async () => {
     await setup('romantic 4 days in Europe');
     fixture.detectChanges();

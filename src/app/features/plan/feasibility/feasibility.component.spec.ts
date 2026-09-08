@@ -55,4 +55,12 @@ describe('FeasibilityComponent', () => {
     fixture.detectChanges();
     expect(nav).toHaveBeenCalledWith(['/']);
   });
+
+  it('renders the planner stepper', fakeAsync(async () => {
+    await setup({ ...baseIntent, region: 'Europe', month: 5 });
+    fixture.detectChanges();
+    tick(600);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-planner-stepper')).toBeTruthy();
+  }));
 });

@@ -68,6 +68,11 @@ describe('ConfirmComponent', () => {
     expect(nav).toHaveBeenCalledWith(['/']);
   });
 
+  it('renders the planner stepper even while the destination guard redirects', async () => {
+    await setup(false);
+    expect(fixture.nativeElement.querySelector('app-planner-stepper')).toBeTruthy();
+  });
+
   it('creates the trip, generates+persists the itinerary, and navigates to the dashboard', async () => {
     await setup(true);
     await fixture.componentInstance.buildTrip();

@@ -6,6 +6,7 @@ import { TripPlannerAiService } from '../../../core/services/trip-planner-ai.ser
 import { TripPlannerStore } from '../../../core/services/trip-planner-store.service';
 import type { TripIntent } from '../../../core/models/trip-intent.model';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { PlannerStepperComponent } from '../../../shared/ui/planner-stepper/planner-stepper.component';
 
 export const REGIONS = ['Europe', 'Asia', 'Africa', 'Americas', 'Oceania'];
 
@@ -27,7 +28,7 @@ export const MONTHS = [
 @Component({
   selector: 'app-understand',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, PlannerStepperComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './understand.component.html',
   styleUrl: './understand.component.css',
