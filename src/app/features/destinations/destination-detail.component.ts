@@ -83,7 +83,21 @@ export class DestinationDetailComponent {
   });
 
   buildTrip(): void {
-    this.router.navigate(['/trips/new'], { queryParams: { destination: this.slug() } });
+    const dest = this.destination();
+    if (!dest) return;
+    // Sensible defaults since the user skipped the AI flow by picking a destination
+    // directly from Discover/Home; reuses the same Confirm screen as the AI path.
+    this.plannerStore.setIntent({
+      travelStyle: [],
+      preferences: [],
+      interests: [],
+      missingInformation: [],
+      confidence: 1,
+      durationDays: 4,
+      travelers: 2,
+    });
+    this.plannerStore.chooseDestination(dest);
+    this.router.navigate(['/plan/confirm']);
   }
 
   shortDate(iso: string): string {

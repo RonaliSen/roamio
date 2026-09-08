@@ -52,11 +52,16 @@ describe('DestinationDetailComponent', () => {
     expect(button?.textContent?.trim().toLowerCase()).toContain('build my trip');
   });
 
-  it('navigates to the wizard with the destination', async () => {
+  it('seeds the planner store with default intent + the destination, and navigates to /plan/confirm', async () => {
     const fixture = await setup('prague');
     const nav = spyOn(TestBed.inject(Router), 'navigate');
+    const store = TestBed.inject(TripPlannerStore);
     fixture.componentInstance.buildTrip();
-    expect(nav).toHaveBeenCalledWith(['/trips/new'], { queryParams: { destination: 'prague' } });
+    expect(store.intent()).toEqual(
+      jasmine.objectContaining({ durationDays: 4, travelers: 2 }),
+    );
+    expect(store.chosenDestination()?.slug).toBe('prague');
+    expect(nav).toHaveBeenCalledWith(['/plan/confirm']);
   });
 
   it('renders a not-found state with a link back to Discover for an unknown slug', async () => {

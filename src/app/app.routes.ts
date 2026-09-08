@@ -49,10 +49,10 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'trips/new',
+    path: 'plan/confirm',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/trips/trip-wizard.component').then((m) => m.TripWizardComponent),
+      import('./features/plan/confirm/confirm.component').then((m) => m.ConfirmComponent),
   },
   {
     path: 'trips/:id',
