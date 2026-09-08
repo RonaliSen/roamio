@@ -58,13 +58,17 @@ npm run e2e
 ## What's built / what's not yet
 
 Built: destination discovery with filters, destination detail pages, a
-5-step trip wizard, a persisted itinerary with drag-and-drop reordering,
+natural-language AI trip planner (intent parsing → feasibility check →
+ranked destination recommendations → confirm) built on deterministic,
+mock-AI-shaped engines, a persisted itinerary with drag-and-drop reordering,
 weather-driven packing recommendations, an editable budget breakdown, a
 trip dashboard with a readiness score, and email/password auth with RLS
 so every user only ever sees their own trips.
 
-Deferred (per the design spec — Phase 1 is mock-data-first): AI-assisted
-planning, the wardrobe/outfit builder, packing-list generation, and real
-weather/maps API integrations. Those areas currently show a stub or use
-fixture data. See [`docs/architecture.md`](docs/architecture.md) for the
-full picture, including which domains are fixture-backed vs Supabase-backed.
+Deferred: a real AI provider behind the planner (it's currently
+implemented deterministically, not a real model call), the wardrobe/outfit
+builder, packing-list generation, real weather/maps/currency API
+integrations, and multi-destination trips. Those areas currently show a
+stub or use fixture data. See [`docs/architecture.md`](docs/architecture.md)
+for the full picture, including which domains are fixture-backed vs
+Supabase-backed.
