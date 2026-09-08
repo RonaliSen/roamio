@@ -1,0 +1,32 @@
+<section class="mx-auto max-w-5xl px-6 py-12">
+  <h1 class="font-display text-3xl text-charcoal">Perfect matches for your trip</h1>
+  <p class="mt-2 font-ui text-taupe">Based on your preferences, here are the best destinations.</p>
+
+  <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    @for (m of matches(); track m.destination.slug; let i = $index) {
+      <app-card>
+        <div data-testid="match-card" class="flex flex-col gap-3">
+          <img
+            [src]="m.destination.heroImage"
+            [alt]="m.destination.name"
+            class="h-40 w-full object-cover"
+          />
+          <div class="flex flex-col gap-1">
+            <h2 class="font-display text-lg text-charcoal">{{ m.destination.name }}</h2>
+            <p class="font-ui text-sm text-taupe">{{ m.destination.country }}</p>
+            <p class="font-ui text-sm text-charcoal">{{ m.score }}% match</p>
+          </div>
+          @for (reason of m.reasons.slice(0, 2); track reason) {
+            <p class="font-ui text-xs text-taupe">{{ reason }}</p>
+          }
+          <p class="font-ui text-sm text-charcoal">
+            €{{ m.destination.dailyBudgetLow }}–€{{ m.destination.dailyBudgetHigh }}/day
+          </p>
+          <app-button [attr.data-testid]="'choose-' + i" (click)="choose(m)">
+            Choose destination
+          </app-button>
+        </div>
+      </app-card>
+    }
+  </div>
+</section>

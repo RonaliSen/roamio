@@ -41,6 +41,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'plan/recommendations',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/plan/recommendations/recommendations.component').then(
+        (m) => m.RecommendationsComponent,
+      ),
+  },
+  {
     path: 'trips/new',
     canActivate: [authGuard],
     loadComponent: () =>
