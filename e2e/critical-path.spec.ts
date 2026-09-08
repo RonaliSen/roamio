@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('home to trip dashboard', async ({ page }) => {
+test('home to trip dashboard via the AI trip planner', async ({ page }) => {
   const email = `e2e_${Date.now()}@roamio.test`;
   await page.goto('/');
   await expect(page.getByText('Every journey, considered').first()).toBeVisible();
@@ -11,27 +11,41 @@ test('home to trip dashboard', async ({ page }) => {
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password').fill('roamio-test-1234');
   await page.getByRole('button', { name: /create account/i }).click();
-  // LoginComponent itself navigates to /discover once the session is set —
-  // wait for that instead of a manual goto, which would race the async signUp.
   await expect(page).toHaveURL('/discover');
 
-  // discover -> prague
-  await page.getByRole('link', { name: /prague/i }).click();
-  await expect(page).toHaveURL(/destinations\/prague/);
+  // Home -> natural-language search -> AI planner flow
+  // Scoped via getByRole('searchbox'), not getByPlaceholder: the <app-search-field> host
+  // element also carries a literal `placeholder` attribute (it's an @Input set via a plain
+  // string in the template, not a property binding), so getByPlaceholder matches both the
+  // host and the inner <input> — a strict-mode violation.
+  await page.goto('/');
+  const searchBox = page.getByRole('searchbox', { name: "Where to next? Try 'quiet coast, 5 days, mild weather'" });
+  await searchBox.fill('romantic 4 day trip in Europe in May');
+  await searchBox.press('Enter');
+  await expect(page).toHaveURL(/\/plan\/understand/);
+  await expect(page.getByRole('heading', { name: /understanding your trip/i })).toBeVisible();
+  await page.getByRole('button', { name: /looks right/i }).click();
 
-  // build trip
+  // feasibility (green — region+month match Prague/Lisbon/Amalfi, no budget constraint)
+  await expect(page).toHaveURL(/\/plan\/feasibility/);
+  await page.getByRole('button', { name: /show destinations/i }).click();
+
+  // recommendations -> pick Prague specifically (not by index, by name, since ties are order-independent)
+  await expect(page).toHaveURL(/\/plan\/recommendations/);
+  await expect(page.getByRole('heading', { name: /perfect matches/i })).toBeVisible();
+  const pragueCard = page.locator('[data-testid="match-card"]').filter({ hasText: 'Prague' });
+  await expect(pragueCard).toBeVisible();
+  await pragueCard.getByRole('button', { name: /choose destination/i }).click();
+
+  // destination detail, arrived via the planner -> shows why-recommended block
+  await expect(page).toHaveURL(/\/destinations\/prague/);
+  await expect(page.getByText(/why roamio recommends it/i)).toBeVisible();
   await page.getByRole('button', { name: /build my trip/i }).click();
-  // Destination step is pre-filled and locked from the ?destination= query param —
-  // advance past it before the date fields become visible.
-  await page.getByRole('button', { name: /next/i }).click(); // destination (locked)
-  await page.getByLabel('Start date').fill('2026-05-01');
-  await page.getByLabel('End date').fill('2026-05-05');
-  await page.getByRole('button', { name: /next/i }).click(); // travelers
-  await page.getByRole('button', { name: /next/i }).click(); // budget
-  await page.getByRole('button', { name: /next/i }).click(); // interests
-  await page.getByRole('button', { name: /create trip/i }).click();
 
-  await expect(page).toHaveURL(/trips\/[0-9a-f-]{36}/);
+  // confirm -> creates the trip + generated itinerary, lands on the dashboard
+  await expect(page).toHaveURL(/\/plan\/confirm/);
+  await page.getByRole('button', { name: /build my itinerary/i }).click();
+  await expect(page).toHaveURL(/\/trips\/[0-9a-f-]{36}/, { timeout: 15000 });
   await expect(page.getByText(/readiness/i)).toBeVisible();
 
   // add an activity

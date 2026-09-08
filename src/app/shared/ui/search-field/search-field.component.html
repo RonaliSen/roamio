@@ -4,5 +4,5 @@
   [attr.aria-label]="placeholder"
   [placeholder]="placeholder"
   (input)="term$.next($any($event.target).value)"
-  (keydown.enter)="flush($any($event.target).value)"
+  (keydown.enter)="$event.preventDefault(); flush($any($event.target).value)"
 />
